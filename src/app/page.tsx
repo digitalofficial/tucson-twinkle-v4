@@ -262,8 +262,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hero spacer to allow scroll-fade */}
-      <div className="hero-spacer" />
 
       {/* ============ PACKAGES ============ */}
       <section className="section" id="packages">
