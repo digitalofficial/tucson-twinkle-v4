@@ -242,6 +242,9 @@ export default function Home() {
 
       {/* ============ HERO (STICKY) ============ */}
       <section className="hero">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=1600&h=900&fit=crop" alt="House with Christmas lights at night" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} fetchPriority="high" />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.75), rgba(10,8,20,0.55), rgba(10,8,20,0.85))' }} />
         <TwinkleField />
         <div className="hero-content-wrapper">
           <Logo className="hero-logo" />
