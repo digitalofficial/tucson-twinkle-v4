@@ -118,6 +118,29 @@ const stats = [
 
 export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
+  const litHouseRef = useRef<HTMLImageElement>(null);
+  const litOverlayRef = useRef<HTMLDivElement>(null);
+  const twinkleRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+
+  /* ---- Scroll-driven lights turning on ---- */
+  useEffect(() => {
+    const handleScroll = () => {
+      const hero = heroRef.current;
+      if (!hero) return;
+      const heroHeight = hero.offsetHeight;
+      const scrollY = window.scrollY;
+      // Lights start turning on after 10% scroll, fully on at 80% of hero
+      const progress = Math.min(1, Math.max(0, (scrollY - heroHeight * 0.1) / (heroHeight * 0.5)));
+
+      if (litHouseRef.current) litHouseRef.current.style.opacity = String(progress);
+      if (litOverlayRef.current) litOverlayRef.current.style.opacity = String(progress);
+      if (twinkleRef.current) twinkleRef.current.style.opacity = String(progress);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   /* ---- Intersection Observer fallback for non-scroll-timeline browsers ---- */
   useEffect(() => {
@@ -240,25 +263,52 @@ export default function Home() {
         </a>
       </nav>
 
-      {/* ============ HERO (STICKY) ============ */}
-      <section className="hero">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=1600&h=900&fit=crop" alt="House with Christmas lights at night" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} fetchPriority="high" />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.75), rgba(10,8,20,0.55), rgba(10,8,20,0.85))' }} />
-        <TwinkleField />
-        <div className="hero-content-wrapper">
-          <Logo className="hero-logo" />
-          <h1>Make your home sparkle.</h1>
-          <p>
-            Professional Christmas light installation and takedown in Tucson, AZ.
-            From simple roofline glow to jaw-dropping full-property displays.
-          </p>
-          <button className="cta-button" onClick={scrollToForm}>
-            Get a Free Estimate
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
+      {/* ============ HERO — LIGHTS TURN ON AS YOU SCROLL ============ */}
+      <section ref={heroRef} className="hero" style={{ position: 'relative', height: '200vh' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+          {/* Layer 1: Beautiful home at dusk — NO lights (always visible) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1920&h=1080&fit=crop"
+            alt="Beautiful home at dusk"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+            fetchPriority="high"
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.5), rgba(10,8,20,0.35), rgba(10,8,20,0.6))' }} />
+
+          {/* Layer 2: Same home WITH holiday lights — fades in on scroll */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={litHouseRef}
+            src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=1920&h=1080&fit=crop"
+            alt="Home with Christmas lights glowing"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0 }}
+          />
+          <div ref={litOverlayRef} style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.4), rgba(10,8,20,0.2), rgba(10,8,20,0.55))', opacity: 0 }} />
+
+          {/* Twinkling light particles — also fade in with scroll */}
+          <div ref={twinkleRef} style={{ opacity: 0 }}>
+            <TwinkleField />
+          </div>
+
+          {/* Content */}
+          <div className="hero-content-wrapper" style={{ position: 'relative', zIndex: 10 }}>
+            <Logo className="hero-logo" />
+            <h1 style={{ color: '#fff', textShadow: '0 2px 20px rgba(0,0,0,0.6)' }}>Make your home sparkle.</h1>
+            <p style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}>
+              Professional Christmas light installation and takedown in Tucson, AZ.
+              From simple roofline glow to jaw-dropping full-property displays.
+            </p>
+            <p style={{ color: 'rgba(255,215,0,0.5)', fontSize: '0.8rem', letterSpacing: '0.12em', marginTop: '1.5rem', animation: 'pulse 2s ease-in-out infinite' }}>
+              ↓ Scroll to light it up
+            </p>
+            <button className="cta-button" onClick={scrollToForm} style={{ marginTop: '1rem' }}>
+              Get a Free Estimate
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </section>
 
