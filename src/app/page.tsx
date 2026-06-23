@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Logo from '@/components/Logo';
 import TwinkleField from '@/components/TwinkleField';
+import HouseWithLights from '@/components/HouseWithLights';
 
 /* ================================================================
    DATA
@@ -118,29 +119,7 @@ const stats = [
 
 export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
-  const litHouseRef = useRef<HTMLImageElement>(null);
-  const litOverlayRef = useRef<HTMLDivElement>(null);
-  const twinkleRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
-
-  /* ---- Scroll-driven lights turning on ---- */
-  useEffect(() => {
-    const handleScroll = () => {
-      const hero = heroRef.current;
-      if (!hero) return;
-      const heroHeight = hero.offsetHeight;
-      const scrollY = window.scrollY;
-      // Lights start turning on after 10% scroll, fully on at 80% of hero
-      const progress = Math.min(1, Math.max(0, (scrollY - heroHeight * 0.1) / (heroHeight * 0.5)));
-
-      if (litHouseRef.current) litHouseRef.current.style.opacity = String(progress);
-      if (litOverlayRef.current) litOverlayRef.current.style.opacity = String(progress);
-      if (twinkleRef.current) twinkleRef.current.style.opacity = String(progress);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   /* ---- Intersection Observer fallback for non-scroll-timeline browsers ---- */
   useEffect(() => {
@@ -263,46 +242,26 @@ export default function Home() {
         </a>
       </nav>
 
-      {/* ============ HERO — LIGHTS TURN ON AS YOU SCROLL ============ */}
-      <section ref={heroRef} style={{ position: 'relative', height: '200vh', zIndex: 1 }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* Layer 1: Beautiful home at dusk — NO lights (always visible) */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop&crop=center"
-            alt="Beautiful home at twilight"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
-            fetchPriority="high"
-          />
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,8,20,0.6), rgba(10,8,20,0.4), rgba(10,8,20,0.7))', zIndex: 1 }} />
+      {/* ============ HERO — SVG HOUSE WITH LIGHTS THAT TURN ON ============ */}
+      <section ref={heroRef} style={{ position: 'relative', height: '250vh', zIndex: 1, background: 'linear-gradient(to bottom, #070510, #0a0814, #0d0d20)' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          {/* SVG house illustration with individually animated lights */}
+          <HouseWithLights />
 
-          {/* Layer 2: Same home WITH holiday lights — fades in on scroll */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            ref={litHouseRef}
-            src="https://images.unsplash.com/photo-1576400883215-7083c50228ce?w=1920&h=1080&fit=crop&crop=center"
-            alt="Home with Christmas lights glowing"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0, zIndex: 2 }}
-          />
-          <div ref={litOverlayRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,8,20,0.35), rgba(10,8,20,0.15), rgba(10,8,20,0.5))', opacity: 0, zIndex: 3 }} />
-
-          {/* Twinkling light particles — also fade in with scroll */}
-          <div ref={twinkleRef} style={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 4 }}>
-            <TwinkleField />
-          </div>
-
-          {/* Content */}
-          <div className="hero-content-wrapper" style={{ position: 'relative', zIndex: 10 }}>
+          {/* Content overlay */}
+          <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px', marginBottom: '15vh' }}>
             <Logo className="hero-logo" />
-            <h1 style={{ color: '#fff', textShadow: '0 2px 20px rgba(0,0,0,0.6)' }}>Make your home sparkle.</h1>
-            <p style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 6vw, 5rem)', color: '#FFD700', textShadow: '0 0 40px rgba(255,215,0,0.3)', letterSpacing: '-0.02em', margin: '16px 0' }}>
+              Make your home sparkle.
+            </h1>
+            <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'rgba(255,255,255,0.6)', maxWidth: '520px', margin: '0 auto 16px', lineHeight: 1.7 }}>
               Professional Christmas light installation and takedown in Tucson, AZ.
               From simple roofline glow to jaw-dropping full-property displays.
             </p>
-            <p style={{ color: 'rgba(255,215,0,0.5)', fontSize: '0.8rem', letterSpacing: '0.12em', marginTop: '1.5rem', animation: 'pulse 2s ease-in-out infinite' }}>
-              ↓ Scroll to light it up
+            <p style={{ color: 'rgba(255,215,0,0.4)', fontSize: '0.75rem', letterSpacing: '0.15em', marginBottom: '16px' }}>
+              ↓ SCROLL TO LIGHT IT UP
             </p>
-            <button className="cta-button" onClick={scrollToForm} style={{ marginTop: '1rem' }}>
+            <button className="cta-button" onClick={scrollToForm}>
               Get a Free Estimate
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
