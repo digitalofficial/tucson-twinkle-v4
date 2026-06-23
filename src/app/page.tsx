@@ -264,30 +264,30 @@ export default function Home() {
       </nav>
 
       {/* ============ HERO — LIGHTS TURN ON AS YOU SCROLL ============ */}
-      <section ref={heroRef} className="hero" style={{ position: 'relative', height: '200vh' }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+      <section ref={heroRef} style={{ position: 'relative', height: '200vh', zIndex: 1 }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {/* Layer 1: Beautiful home at dusk — NO lights (always visible) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1920&h=1080&fit=crop"
-            alt="Beautiful home at dusk"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop&crop=center"
+            alt="Beautiful home at twilight"
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
             fetchPriority="high"
           />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.5), rgba(10,8,20,0.35), rgba(10,8,20,0.6))' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,8,20,0.6), rgba(10,8,20,0.4), rgba(10,8,20,0.7))', zIndex: 1 }} />
 
           {/* Layer 2: Same home WITH holiday lights — fades in on scroll */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={litHouseRef}
-            src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=1920&h=1080&fit=crop"
+            src="https://images.unsplash.com/photo-1576400883215-7083c50228ce?w=1920&h=1080&fit=crop&crop=center"
             alt="Home with Christmas lights glowing"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0 }}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0, zIndex: 2 }}
           />
-          <div ref={litOverlayRef} style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,20,0.4), rgba(10,8,20,0.2), rgba(10,8,20,0.55))', opacity: 0 }} />
+          <div ref={litOverlayRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,8,20,0.35), rgba(10,8,20,0.15), rgba(10,8,20,0.5))', opacity: 0, zIndex: 3 }} />
 
           {/* Twinkling light particles — also fade in with scroll */}
-          <div ref={twinkleRef} style={{ opacity: 0 }}>
+          <div ref={twinkleRef} style={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 4 }}>
             <TwinkleField />
           </div>
 
